@@ -1,0 +1,35 @@
+FROM ubuntu:18.04
+MAINTAINER Alexander Serebryakov <sasha@f5.com>
+ENV DEBIAN_FRONTEND=noninteractive
+
+ENV TZ=Europe/Zagreb
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+    apt-utils \
+    curl \
+    netcat \
+    net-tools \
+    tree \
+    python \
+    python-requests \
+    git \
+    nginx \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# to be able to use "nano" with shell on "docker exec -it [CONTAINER ID] bash"
+ENV TERM xterm
+
+COPY nginx-selfsigned.key /
+COPY nginx-selfsigned.crt /
+COPY default /etc/nginx/sites-enabled/default
+
+# Run.
+
+EXPOSE 8443
+
+WORKDIR /
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
+#HEALTHCHECK --interval=5s --timeout=3s --retries=3 CMD curl -kf https://localhost:8443 || exit 1
+
+

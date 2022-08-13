@@ -1,0 +1,177 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adjectives
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443   
+  selector:
+    app: adjectives
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adjectives
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adjectives
+  template:
+    metadata:
+      labels:
+        app: adjectives
+    spec:
+      containers:
+      - name: adjectives
+        image: registry.gitlab.com/sentence-application/adjectives/volterra:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      - name: generic-ssl-layer
+        image: registry.gitlab.com/suslon/sentence-app/generic-ssl-layer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: animals
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443   
+  selector:
+    app: animals
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: animals
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: animals
+  template:
+    metadata:
+      labels:
+        app: animals
+    spec:
+      containers:
+      - name: animals
+        image: registry.gitlab.com/sentence-application/animals/volterra:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      - name: generic-ssl-layer
+        image: registry.gitlab.com/suslon/sentence-app/generic-ssl-layer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: colors
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443    
+  selector:
+    app: colors
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: colors
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: colors
+  template:
+    metadata:
+      labels:
+        app: colors
+    spec:
+      containers:
+      - name: colors
+        image: registry.gitlab.com/sentence-application/colors/volterra:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      - name: generic-ssl-layer
+        image: registry.gitlab.com/suslon/sentence-app/generic-ssl-layer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: locations
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443   
+  selector:
+    app: locations
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: locations
+  template:
+    metadata:
+      labels:
+        app: locations
+    spec:
+      containers:
+      - name: locations
+        image: registry.gitlab.com/sentence-application/locations/volterra:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      - name: generic-ssl-layer
+        image: registry.gitlab.com/suslon/sentence-app/generic-ssl-layer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+

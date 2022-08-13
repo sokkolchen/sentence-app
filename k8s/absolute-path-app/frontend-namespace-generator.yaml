@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+#  type: ClusterIP
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: registry.gitlab.com/suslon/sentence-app/frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GENERATORURL
+          value: 'https://a9c8d2c6ebeb146c78854f19c26fdd6f-638416780.eu-west-3.elb.amazonaws.com/name'        
+        - name: GOOGLETAGID
+          value: GTM-PC5HX2H

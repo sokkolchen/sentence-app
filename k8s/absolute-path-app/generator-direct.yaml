@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: generator
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443    
+  selector:
+    name: generator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: generator
+  template:
+    metadata:
+      labels:
+        name: generator
+    spec:
+      containers:
+      - name: generator
+        image: registry.gitlab.com/suslon/sentence-app/generator:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ADJECTIVESURL
+          value: 'https://a2dc92a55edf1415a94a40d2bb61ee0a-1469508715.eu-west-3.elb.amazonaws.com/adjectives'
+        - name: ANIMALSURL
+          value: 'https://abbe0755213c44bbb829194d2324d9d9-105633954.eu-west-3.elb.amazonaws.com/animals'
+        - name: COLORSURL
+          value: 'https://a35eea8bf1e5143a599f259a85c47a46-1083722869.eu-west-3.elb.amazonaws.com/colors'
+        - name: LOCATIONSURL
+          value: 'https://adee2edd565b34371b907c190d2ed48d-2061654509.eu-west-3.elb.amazonaws.com/locations'
+      - name: generic-ssl-layer
+        image: registry.gitlab.com/suslon/sentence-app/generic-ssl-layer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+        env:
+        - name: NAMESPACE
+          value: sentence-app
