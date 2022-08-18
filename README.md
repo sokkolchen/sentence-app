@@ -109,4 +109,4 @@ $ curl -k https://a9c8d2c6ebeb146c78854f19c26fdd6f-638416780.eu-west-3.elb.amazo
 Use same approach we used for generator at step 4. to deploy frontent with `frontend-namespace-generator.yaml`</br>
 You should see same page as on picture above as a result.
 
-Enjoy!!
+Enjoy!
